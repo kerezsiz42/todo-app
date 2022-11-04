@@ -64,7 +64,7 @@ export default () => {
         </button>
       </form>
       <span class="text-center">
-        {connected ? "Connected" : "Not connected"}
+        {connected.value ? "Connected" : "Not connected"}
       </span>
       <ul class="flex-grow">
         {items.value.map((item) => (
