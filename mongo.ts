@@ -1,8 +1,38 @@
 import { MongoClient, ObjectId } from "mongo";
-import { config } from "dotenv";
+import { z } from "zod";
 
-const { MONGO_DB, MONGO_HOSTNAME, MONGO_PORT, MONGO_PASSWORD, MONGO_USER } =
-  await config();
+console.log(`Process started with pid: ${Deno.pid}`);
+try {
+  new TextDecoder("utf-8")
+    .decode(
+      Deno.readFileSync(".env"),
+    )
+    .split("\n")
+    .filter((envvar) => /^(?!#)/.test(envvar) && envvar !== "")
+    .map((envvar) => envvar.trim().split("="))
+    .forEach(([key, value]) => {
+      Deno.env.set(key, value);
+    });
+} catch {
+  // Continue if no .env file found
+}
+
+export const {
+  MONGO_DB,
+  MONGO_HOSTNAME,
+  MONGO_PASSWORD,
+  MONGO_PORT,
+  MONGO_USER,
+} = z.object({
+  MONGO_DB: z.string(),
+  MONGO_HOSTNAME: z.string(),
+  MONGO_PASSWORD: z.string(),
+  MONGO_PORT: z
+    .string()
+    .regex(/\d+/)
+    .transform(Number),
+  MONGO_USER: z.string(),
+}).parse(Deno.env.toObject());
 
 export const mongo = new MongoClient();
 console.log("Connecting to database...");
