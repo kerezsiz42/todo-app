@@ -1,10 +1,8 @@
 import { MongoClient, ObjectId } from "mongo";
+import { config } from "dotenv";
 
-const MONGO_DB = "todo";
-const MONGO_HOSTNAME = "cluster0.cxec7gx.mongodb.net";
-const MONGO_PORT = 27017;
-const MONGO_PASSWORD = "1YHdlp4e5anqJs8O";
-const MONGO_USER = "da5janJ52D";
+const { MONGO_DB, MONGO_HOSTNAME, MONGO_PORT, MONGO_PASSWORD, MONGO_USER } =
+  await config();
 
 export const mongo = new MongoClient();
 console.log("Connecting to database...");
