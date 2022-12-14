@@ -13,7 +13,7 @@ export class WebSocketSubscriber {
     url: string | URL,
     onStateChange: (isConnected: boolean) => void,
     // deno-lint-ignore no-explicit-any
-    onMessage: (message: any) => void,
+    onMessage: (message: any) => void
   ) {
     this.ws = this.connect(url);
     this.isConnected = false;
@@ -25,7 +25,7 @@ export class WebSocketSubscriber {
     this.onMessage = onMessage;
   }
 
-  private setState(newState: boolean) {
+  private setState(newState: boolean): void {
     this.previousIsConnected = this.isConnected;
     this.isConnected = newState;
     this.onStateChange(this.isConnected);
@@ -48,7 +48,7 @@ export class WebSocketSubscriber {
       }
       this.timeoutId = setTimeout(
         () => this.connect(url),
-        Math.min(this.maxRetryDelay, this.currentRetryDelay),
+        Math.min(this.maxRetryDelay, this.currentRetryDelay)
       );
     };
     this.ws = ws;

@@ -1,17 +1,18 @@
 import { Handlers } from "$fresh/server.ts";
-import { store } from "../../websockets.ts";
+import { PubSub } from "../../PubSub.ts";
 
 export const handler: Handlers = {
   GET(req, _ctx) {
     const { socket, response } = Deno.upgradeWebSocket(req);
+    const pubsub = PubSub.instance;
     socket.onopen = () => {
-      store.websockets = [...store.websockets, socket];
+      pubsub.add(socket);
       setTimeout(() => {
         socket.close();
       }, 60_000);
     };
     socket.onclose = () => {
-      store.websockets = store.websockets.filter((s) => s !== socket);
+      pubsub.remove(socket);
     };
     return response;
   },
